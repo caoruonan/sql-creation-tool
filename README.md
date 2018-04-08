@@ -1,1 +1,22 @@
-"# sql-creation-tool" 
+## sql-creation-tool基于angularjs的sql创建工具
+
+#### 1.功能点参照Navicat
+
+#### 2.依赖   
+* angularjs
+* jquery-ui
+* jquery-contentmenu
+* jsplumb
+
+#### 3.运行
+* bower install 
+* node http
+
+#### 4.实现功能
+* 数据表切换
+* 拖拽生成表
+* 表的删除以及折叠效果
+* 字段的选中
+* 字段之间关联
+* 动态生成sql语句
+* 其他功能点参照Navicat
