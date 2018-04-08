@@ -1,5 +1,7 @@
 ## sql-creation-tool基于angularjs的sql创建工具
 
+![Image text](https://github.com/caoruonan/sql-creation-tool/blob/master/img/demo1.jpg?raw=true)
+
 #### 1.功能点参照Navicat
 
 #### 2.依赖   
