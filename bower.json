@@ -1,0 +1,18 @@
+{
+  "name": "workflow",
+  "version": "1.0.0",
+  "description": "A System of workflow service",
+  "dependencies": {
+    "jquery": "^1.12.4",
+    "jquery-ui": "^1.12.1",
+    "angular": "1.4.x",
+    "angular-resource": "1.4.x",
+    "angular-bootstrap": "^2.3.0",
+    "angular-ui-router": "^0.3.2",
+    "bootstrap": "^3.3.7",
+    "oclazyload": "^1.0.9",    
+    "jsPlumb": "2.1.4",
+    "jQuery-contextMenu": "^2.6.3",
+    "font-awesome": "^4.7.0"
+  }
+}

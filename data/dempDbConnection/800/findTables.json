@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "name": "app_classification",
+      "id": 1
+    },
+    {
+      "name": "app_classification_group",
+      "id": 2
+    },
+    {
+      "name": "built_in_app_classification",
+      "id": 3
+    },
+    {
+      "name": "mobile_service_account",
+      "id": 4
+    },
+    {
+      "name": "msg_contents",
+      "id": 5
+    }
+  ],
+  "status": "success"
+}

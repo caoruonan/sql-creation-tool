@@ -1,0 +1,37 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "id"
+    },
+    {
+      "id": 2,
+      "name": "created_by"
+    },
+    {
+      "id": 3,
+      "name": "created_date"
+    },
+    {
+      "id": 4,
+      "name": "last_modified_by"
+    },
+    {
+      "id": 5,
+      "name": "last_modified_date"
+    },
+    {
+      "id": 6,
+      "name": "version"
+    },
+    {
+      "id": 7,
+      "name": "icon_id"
+    },
+    {
+      "id": 8,
+      "name": "name"
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+.sql-tool-box .control-label {
+    font-size: 12px;
+    color: #787878;
+}
+.sql-tool-box .nav.nav-pills.nav-stacked {
+    width: 160px;
+    margin-left: 15px;
+    margin-bottom: 0;
+}
+.sql-tool-box .nav.nav-pills.nav-stacked>li>a {
+    padding: 6px ;
+    display: inline-block;
+    border-radius: 5px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.Content-box {
+    height:300px;
+    overflow: auto;
+}
+#Content-Main{
+    position: relative;
+    height: 2000px;
+    width: 1000px;
+    background: url("../img/fang15.png") repeat;
+}
+.content-bottom {
+    height:140px;
+    overflow-y: auto;
+    border: 1px solid #ecedec;
+}
+.content-bottom span {
+    cursor: default;
+}
+#Content-Main .item {
+    position: absolute;
+    left: -135px;
+    top:-140px;
+    cursor: pointer;
+    font-size: 12px;
+    width: 135px;
+    border-bottom: 1px solid #217ebd;
+}
+#Content-Main .item *::selection {
+    background: transparent;
+}
+#Content-Main .item .title {
+    display: block;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 22px;
+    background: #217ebd;
+    cursor: move;
+    color: white;
+}
+#Content-Main input[type=checkbox] {
+    margin-left: -16px;
+}
+#Content-Main .item .title>.checkbox {
+    display: inline-block;
+    margin: 0;
+    width: calc( 100% - 30px );
+}
+#Content-Main .item .title>.checkbox div {
+    cursor: move;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sql-tool-box .field-box {
+    margin: 0;
+    border-left: 1px solid #217ebd;
+    border-right: 1px solid #217ebd;
+    background: white;
+}
+.sql-tool-box .field-box>.checkbox {
+    margin: 0;
+    padding: 2px 1px 2px 1px;
+    color: #aaaaaa;
+}
+.sql-tool-box .field-box>.checkbox:hover {
+    background: #ecedec;
+}
+.sql-tool-box .field-box>.checkbox>label>span {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.sql-tool-box .title .btn-switch,.sql-tool-box .title .btn-close {
+    float: right;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    cursor: pointer;
+    color: #333;
+}
+.sql-tool-box .title .btn-close {
+    background: #ed6b75;
+}
+.sql-tool-box .field-box> .checkbox .selectFont {
+    color: #3c3c3c;
+}
+.jsplumb-group-collapsed .field-box {
+    display: none;
+}
+.jsplumb-group-collapsed.collapsed {
+    height: 20px;
+}
+.btn-switch>i.fa-angle-up {
+    display: none;
+}
+.jsplumb-group-collapsed.collapsed .btn-switch>i.fa-angle-down {
+    display: none;
+}
+.jsplumb-group-collapsed.collapsed .btn-switch>i.fa-angle-up {
+    display: block;
+}
+.small-blue circle {
+    fill: #dedede;
+    cursor: pointer;
+}
+.small-blue>svg {
+    z-index: 10;
+}
+.jsplumb-hover {
+    z-index: 11;
+}
+.jsplumb-hover circle{
+    fill: #5bc0de;
+}
+.jsplumb-hover path {
+    stroke: #5bc0de;
+}
+.content-bottom .sql-statement-box {
+    overflow: hidden;
+    position: relative;
+}
+.content-bottom .sql-statement-box .title {
+    color: #407dff;
+    font-size: 13px;
+    font-weight: bold;
+}
+.sql-statement-box>.title {
+    width: 112px;
+    float: left;
+}
+.sql-statement-box>.title>.sql-font-gray {
+    display: inline-block;
+}
+.sql-statement-box>.text-box {
+    width: calc( 100% - 112px );
+    overflow: hidden;
+    position: relative;
+    float: right;
+    font-size: 12px;
+}
+.sql-statement-box>.text-box .blue-font {
+    color: #407dff;
+}
+.sql-statement-box .sql-font-gray {
+    color: #aaaaaa;
+    font-weight: normal;
+    font-size: 12px;
+    cursor: pointer;
+}
+.popover {
+    z-index: 10050!important;
+}
+.popover-footer {
+    text-align: right;
+}
+.popover-footer .btn {
+    padding-top: 2px;
+    padding-bottom: 1px;
+    font-size: 12px;
+}
+.sql-statement-box .select-text {
+    cursor: pointer;
+    font-size: 12px;
+}
+.popover-ul {
+    margin: -9px -14px 0;
+    padding: 0;
+    min-width: 85px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.popover-ul>li {
+    display: block;
+    list-style: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    padding: 2px 10px;
+}
+.popover-ul>li:first-child {
+    border-radius: 6px 6px 0 0;
+}
+.popover-ul>li:hover {
+    background: #eee;
+}
+.sql-statement-box *::selection {
+    background: white;
+}
+.popover-ul>li.active {
+    background: rgba(56, 140, 255, 0.67);
+    color: white;
+}

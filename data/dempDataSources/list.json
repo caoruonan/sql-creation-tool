@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "dbName": "DB_SUBJECT_AUTOMONITOR_",
+      "dbType": "sqlserver",
+      "id": 800
+    },
+    {
+      "dbName": "DB_SUBJECT_PWSB_",
+      "dbType": "sqlserver",
+      "id": 820
+    },
+    {
+      "dbName": "TJSJPT1",
+      "dbType": "oracle",
+      "id": 821
+    },
+    {
+      "dbName": "DB_SUBJECT_PWSB_",
+      "dbType": "sqlserver",
+      "id": 840
+    }
+  ],
+  "status": "success"
+}

@@ -1,0 +1,394 @@
+<div class="container" ng-controller="DemoController" style="margin-top:15px;">
+    <div class="sql-tool-box">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">数据库</label>
+                    </div>
+                    <div class="col-md-12" style="margin-left: 15px;">
+                        <select class="form-control" ng-model="model.database" ng-change="databaseChange()">
+                            <option ng-repeat="dataSource in dataSourceNameList" value="{{dataSource.id}}" ng-bind="dataSource.dbName"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-md-12">
+                        <label class="control-label">数据表</label>
+                        <ul class="nav nav-pills nav-stacked" style="margin-left: 15px;">
+                            <li ng-repeat="dataSheet in dataSheetList" repeat-finish>
+                                <a class="draggable" id="{{dataSheet.id}}" title="{{dataSheet.name}}"
+                                   href="javascript:void(0);" ng-bind="dataSheet.name"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="Content-box">
+                    <div id="Content-Main">
+                        <div id="{{module.defineId}}" group="{{module.defineId}}"
+                             ng-repeat="module in dataSheetModuleList" item-repeat-finish class="item">
+                        <span class="jtk-group-expanded title">
+                            <div class="checkbox">
+                                <input type="checkbox" ng-model="module.select" ng-change="moduleSelect(module)">
+                                <div ng-bind="module.name"></div>
+                            </div>
+                            <div class="btn-close" ng-click="removeModule(module.defineId)">×</div>
+                            <div class="btn-switch" ng-click="switch(module.defineId)">
+                                <i class="fa fa-angle-down"></i>
+                                <i class="fa fa-angle-up"></i>
+                            </div>
+                        </span>
+                            <div class="jtk-group-collapsed field-box" ng-repeat="field in module.fields"
+                                 id="{{field.defineId}}">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="field.select"
+                                               ng-change="fieldSelect(module, field)">
+                                        <span ng-class="{'selectFont': field.select}" ng-bind="field.name"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-bottom">
+                    <div class="sql-statement-box">
+                        <div class="title">
+                            SELECT
+                            <div class="sql-font-gray"
+                                 ng-style="{'color': finalStringList.Distinct ?'#34495e':'#aaaaaa'}" style="float: right;">
+                            <span ng-click="finalStringList.Distinct = !finalStringList.Distinct">
+                                <span ng-bind="finalStringList.Distinct?'&nbsp;&nbsp;':'&lt;'"></span>
+                                    Distinct
+                                <span ng-if="!finalStringList.Distinct">&gt;</span>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="text-box" ng-repeat="select in finalStringList.SELECT track by $index">
+                        <span class="itemMenu" flag="SELECT" index="{{$index}}">
+                            <span class="select-text" ng-class="{'sql-font-gray': select.constraint == '<func>'}"
+                                  ng-bind="select.constraint"
+                                  popover-trigger="'outsideClick'" popover-append-to-body="true" uib-popover-template="'chooseConstraint.html'"
+                                  ng-click="getPopoverFlag('SELECT', $index, select.constraint, 'constraint')"></span>
+
+                            <span ng-if="select.constraint != '<func>'">(</span>
+                            <span class="select-text" ng-bind="select.text" popover-trigger="'outsideClick'" popover-append-to-body="true"
+                                  uib-popover-template="'chooseFromField.html'"
+                                  ng-click="getPopoverFlag('SELECT', $index, select.text, 'text', select.defineId)"></span>
+                            <span ng-if="select.constraint != '<func>'">)</span>
+
+                            <span class="sql-font-gray" ng-if="!select.alias" popover-trigger="'outsideClick'" popover-append-to-body="true"
+                                  uib-popover-template="'inputText.html'"
+                                  ng-click="getPopoverFlag('SELECT', $index, select.alias, 'alias')">&lt;别名&gt;</span>
+                            <span class="blue-font" ng-if="select.alias">AS</span>
+                            <span class="select-text" ng-if="select.alias" ng-bind="select.alias" popover-append-to-body="true"
+                                  popover-trigger="'outsideClick'" uib-popover-template="'inputText.html'"
+                                  ng-click="getPopoverFlag('SELECT', $index, select.alias, 'alias')"></span>
+
+                            <span ng-if="finalStringList.SELECT.length && $index != finalStringList.SELECT.length - 1">,</span>
+                        </span>
+                        </div>
+                        <div class="text-box">
+                        <span class="sql-font-gray">
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('SELECT')">&lt;按这里添加栏位&gt;</span>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="sql-statement-box">
+                        <div class="title">FROM</div>
+                        <div class="text-box" ng-repeat="from in finalStringList.FROM track by $index"
+                             ng-init="outerIndex = $index">
+                            <div><span class="select-text blue-font itemMenu" flag="FROM" index="{{$index}}"
+                                       ng-bind="from.relation =='[Custom Join]'?(from.relation + ':,'):from.relation"
+                                       popover-trigger="'outsideClick'" uib-popover-template="'chooseFromRelation.html'" popover-append-to-body="true"
+                                       ng-click="getPopoverFlag('FROM', $index, from.relation, 'relation')"></span>
+                            </div>
+                            <div>
+                                <span class="itemMenu" flag="FROM" index="{{$index}}" ng-bind="from.from"></span>
+
+                                <span class="sql-font-gray" ng-if="!from.alias" popover-trigger="'outsideClick'"
+                                      uib-popover-template="'inputText.html'" popover-append-to-body="true"
+                                      ng-click="getPopoverFlag('FROM', $index, from.alias, 'alias')">&lt;别名&gt;</span>
+                                <span class="blue-font" ng-if="from.alias">AS</span>
+                                <span class="select-text" ng-if="from.alias" ng-bind="from.alias"
+                                      popover-trigger="'outsideClick'" uib-popover-template="'inputText.html'" popover-append-to-body="true"
+                                      ng-click="getPopoverFlag('FROM', $index, from.alias, 'alias')"></span>
+
+                                <span ng-if="$index != 0" style="display: inline-table;">
+                                <span ng-repeat="content in from.content track by $index">
+                                    <span class="blue-font" ng-if="$index == 0">ON</span>
+                                    <span class="itemMenu" flag="FROM" parentIndex="{{$parent.$index}}"
+                                          item="content" index="{{$index}}">
+                                        <span class="select-text blue-font"
+                                              ng-if="content.contact && content.contact != undefined"
+                                              ng-bind="content.contact" popover-trigger="'outsideClick'"
+                                              uib-popover-template="'contact.html'" popover-append-to-body="true"
+                                              ng-click="getPopoverFlag('FROM', outerIndex, content.contact, 'content', $index)"></span>
+                                        <br ng-if="content.contact && content.contact != undefined">
+
+                                        <span class="select-text" popover-trigger="'outsideClick'"
+                                              uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                              ng-click="getPopoverFlag('FROM', outerIndex, content.from, 'from', $index)">
+                                            <span ng-if="!content.from && content.from != undefined">&lt;&minus;</span>{{content.from}}<span
+                                                ng-if="!content.from && content.from != undefined">&minus;&gt;</span>
+                                        </span>
+
+                                        <span class="select-text blue-font" ng-bind="content.relation"
+                                              popover-trigger="'outsideClick'" popover-append-to-body="true"
+                                              uib-popover-template="'relationship.html'"
+                                              ng-click="getPopoverFlag('FROM', outerIndex, content.relation,'relation', $index)"></span>
+
+                                        <span class="select-text" popover-trigger="'outsideClick'"
+                                              uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                              ng-click="getPopoverFlag('FROM', outerIndex, content.to,'to', $index)">
+                                           <span ng-if="!content.to && content.to != undefined">&lt;&minus;</span>{{content.to}}<span
+                                                ng-if="!content.to && content.to != undefined">&minus;&gt;</span>
+                                        </span>
+                                        </span>
+                                    </span>
+                                <div><span class="sql-font-gray" ng-click="pushItem('FROM', $index, 'content')">&lt;限制&gt;</span></div>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="text-box">
+                        <span class="sql-font-gray" popover-trigger="'outsideClick'"
+                              uib-popover-template="'selectFrom.html'" popover-append-to-body="true"
+                              ng-click="getPopoverFlag('FROM')"> &lt;按这里添加表&gt;</span>
+                        </div>
+                    </div>
+                    <div class="sql-statement-box">
+                        <div class="title">WHERE</div>
+                        <div class="text-box" ng-repeat="where in finalStringList.WHERE track by $index">
+                        <span class="select-text itemMenu" flag="WHERE" index="{{$index}}">
+                            <span class="blue-font" ng-if="where.contact && where.contact != undefined"
+                                  ng-bind="where.contact" popover-trigger="'outsideClick'"
+                                  uib-popover-template="'contact.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('WHERE', $index, where.contact)"></span><br
+                                ng-if="where.contact && where.contact != undefined">
+
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('WHERE', $index, where.from, 'from')">
+                                <span ng-if="!where.from && where.from != undefined">&lt;&minus;</span>{{where.from}}<span
+                                    ng-if="!where.from && where.from != undefined">&minus;&gt;</span>
+                            </span>
+
+                            <span class="blue-font" ng-bind="where.relation" popover-trigger="'outsideClick'"
+                                  uib-popover-template="'relationship.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('WHERE', $index, where.relation)"></span>
+
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('WHERE', $index, where.to,'to')">
+                               <span ng-if="!where.to && where.to != undefined">&lt;&minus;</span>{{where.to}}<span
+                                    ng-if="!where.to && where.to != undefined">&minus;&gt;</span>
+                            </span>
+
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('WHERE', $index, where.between,'between')">
+                                <span ng-if="!where.between && where.between != undefined">&lt;&minus;</span>{{where.between}}<span
+                                    ng-if="!where.between && where.between != undefined">&minus;&gt;</span>
+                            </span>
+
+                            <span ng-repeat="data in where.list" popover-trigger="'outsideClick'" popover-append-to-body="true"
+                                  uib-popover-template="'chooseField.html'"
+                                  ng-click="getPopoverFlag('WHERE', $parent.$index, data.text, 'list', $index)">
+                                <span ng-if="!data.text && data.text != undefined">&lt;&minus;</span>{{data.text}}<span
+                                    ng-if="!data.text && data.text != undefined">&minus;&gt;</span>
+                            </span>
+                        </span>
+                        </div>
+                        <div class="text-box">
+                            <span class="sql-font-gray" ng-click="pushItem('WHERE')">&lt;按这里添加条件&gt;</span>
+                        </div>
+                    </div>
+                    <div class="sql-statement-box">
+                        <div class="title">GROUP BY</div>
+                        <div class="text-box" ng-repeat="group in finalStringList.GROUP_BY track by $index">
+                        <span class="select-text itemMenu" flag="GROUP_BY" index="{{$index}}">
+                            <span ng-bind="group.text" class="select-text" class="sql-font-gray"
+                                  popover-trigger="'outsideClick'" uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('GROUP_BY', $index, group.text)"></span>
+                            <span ng-if="finalStringList.GROUP_BY.length && $index != finalStringList.GROUP_BY.length - 1">,</span>
+                        </span>
+                        </div>
+                        <div class="text-box">
+                        <span class="sql-font-gray" class="sql-font-gray" popover-trigger="'outsideClick'"
+                              uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                              ng-click="getPopoverFlag('GROUP_BY')">&lt;按这里添加GROUP BY&gt;</span>
+                        </div>
+                    </div>
+                    <div class="sql-statement-box">
+                        <div class="title">HAVING</div>
+                        <div class="text-box" ng-repeat="having in finalStringList.HAVING track by $index">
+                        <span class="select-text itemMenu" flag="HAVING" index="{{$index}}">
+                            <span class="blue-font" ng-if="having.contact && having.contact != undefined"
+                                  ng-bind="having.contact" popover-trigger="'outsideClick'"
+                                  uib-popover-template="'contact.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('HAVING', $index, having.contact)"></span><br
+                                ng-if="having.contact && having.contact != undefined">
+
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'nodeSelected.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('HAVING', $index, (having.fromAlias?having.fromAlias:having.from), 'from')">
+                                <span ng-if="!having.from && having.from != undefined">&lt;&minus;</span>{{having.fromAlias?having.fromAlias:having.from}}<span
+                                    ng-if="!having.from && having.from != undefined">&minus;&gt;</span>
+                            </span>
+
+                            <span class="blue-font" ng-bind="having.relation" popover-trigger="'outsideClick'"
+                                  uib-popover-template="'relationship.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('HAVING', $index, having.relation)"></span>
+
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'nodeSelected.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('HAVING', $index, (having.toAlias?having.toAlias:having.to),'to')">
+                               <span ng-if="!having.to && having.to != undefined">&lt;&minus;</span>{{(having.toAlias?having.toAlias:having.to)}}<span
+                                    ng-if="!having.to && having.to != undefined">&minus;&gt;</span>
+                            </span>
+
+                            <span popover-trigger="'outsideClick'" uib-popover-template="'nodeSelected.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('HAVING', $index, having.between,'between')">
+                                <span ng-if="!having.between && having.between != undefined">&lt;&minus;</span>{{having.between}}<span
+                                    ng-if="!having.between && having.between != undefined">&minus;&gt;</span>
+                            </span>
+
+                            <span ng-repeat="data in having.list" popover-trigger="'outsideClick'"
+                                  uib-popover-template="'nodeSelected.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('HAVING', $parent.$index, (data.alias?data.alias:data.text), 'list', $index)">
+                                <span ng-if="!data.text && data.text != undefined">&lt;&minus;</span>{{(data.alias?data.alias:data.text)}}<span
+                                    ng-if="!data.text && data.text != undefined">&minus;&gt;</span>
+                            </span>
+                        </span>
+                        </div>
+                        <div class="text-box">
+                            <span class="sql-font-gray" ng-click="pushItem('HAVING')">&lt;按这里添加条件&gt;</span>
+                        </div>
+                    </div>
+                    <div class="sql-statement-box">
+                        <div class="title">ORDER BY</div>
+                        <div class="text-box" ng-repeat="order in finalStringList.ORDER_BY track by $index">
+                        <span class="select-text itemMenu" flag="ORDER_BY" index="{{$index}}">
+                            <span ng-bind="(order.alias?order.alias:order.text)" class="select-text"
+                                  class="sql-font-gray"
+                                  popover-trigger="'outsideClick'" uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                                  ng-click="getPopoverFlag('ORDER_BY', $index, (order.alias?order.alias:order.text))"></span>&nbsp;&nbsp;
+
+                            <span class="blue-font" ng-bind="order.order"
+                                  ng-click="order.order === 'ASC'?order.order = 'DESC':order.order = 'ASC'"></span>
+
+                            <span ng-if="finalStringList.ORDER_BY.length && $index != finalStringList.ORDER_BY.length - 1">,</span>
+                        </span>
+                        </div>
+                        <div class="text-box">
+                        <span class="sql-font-gray" popover-trigger="'outsideClick'"
+                              uib-popover-template="'chooseField.html'" popover-append-to-body="true"
+                              ng-click="getPopoverFlag('ORDER_BY')">&lt;按这里添加ORDER BY&gt;</span>
+                        </div>
+                    </div>
+                    <div class="sql-statement-box">
+                        <div class="title">LIMIT</div>
+                        <div class="text-box">
+                        <span class="select-text" ng-repeat="limit in finalStringList.LIMIT track by $index"
+                              popover-trigger="'outsideClick'" uib-popover-template="'inputText.html'" popover-append-to-body="true"
+                              ng-click="getPopoverFlag('LIMIT', $index)">
+                            <span ng-if="!limit">&lt;&minus;</span>{{limit}}<span ng-if="!limit">&minus;&gt;</span>
+                            <span ng-if="$index == 0">,</span>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" style="margin: 10px 0;" ng-click="btn_ok()">生成sql语句</button>
+                        <textarea class="form-control" rows="5" ng-model="taskSql" style="resize: none;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="inputText.html">
+    <div class="form-group">
+        <input type="text" ng-model="popoverModel.enterText" class="form-control">
+    </div>
+    <div class="popover-footer">
+        <button type="button" class="btn btn-primary" ng-click="inputText_ok()">
+            <span>确定</span>
+        </button>
+        <button type="button" class="btn btn-default" ng-click="popover_cancel()">
+            <span>取消</span>
+        </button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="chooseFromField.html">
+    <ul class="popover-ul">
+        <li ng-class="{'active': popoverFlagSelectIndex === $index}"
+            ng-repeat="fromField in popoverModel.chooseFromFieldList track by $index" ng-bind="fromField.name"
+            ng-click="chooseFromField_ok(fromField)"></li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="chooseConstraint.html">
+    <ul class="popover-ul">
+        <li ng-class="{'active': popoverFlagSelect === constraint}"
+            ng-repeat="constraint in constraintList track by $index" ng-bind="constraint"
+            ng-click="chooseConstraint_ok(constraint)"></li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="chooseFromRelation.html">
+    <ul class="popover-ul">
+        <li ng-class="{'active': popoverFlagSelect === fromRelation}"
+            ng-repeat="fromRelation in fromRelationList track by $index" ng-bind="fromRelation"
+            ng-click="chooseFromRelation_ok(fromRelation)"></li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="selectFrom.html">
+    <ul class="popover-ul" ng-if="dataSheetList.length">
+        <li ng-repeat="dataSheet in dataSheetList track by $index" ng-bind="model.databaseName + '.' +dataSheet.name"
+            ng-click="selectFrom_ok(dataSheet)"></li>
+    </ul>
+    <div ng-if="!dataSheetList.length" style="text-align: center;font-size: 12px;">暂无可选数据表</div>
+</script>
+
+<script type="text/ng-template" id="chooseField.html">
+    <ul class="popover-ul" ng-if="popoverModel.chooseFieldList.length">
+        <li ng-class="{'active': popoverFlagSelectIndex === $index}"
+            ng-repeat="field in popoverModel.chooseFieldList track by $index"
+            ng-bind="(field.alias?field.alias:field.name)" ng-click="chooseField_ok(field)"></li>
+    </ul>
+    <div ng-if="!popoverModel.chooseFieldList.length" style="text-align: center;font-size: 12px;">请选择数据表</div>
+</script>
+
+<script type="text/ng-template" id="nodeSelected.html">
+    <ul class="popover-ul" ng-if="popoverModel.nodeSelected.length">
+        <li ng-class="{'active': popoverFlagSelectIndex === $index}"
+            ng-repeat="field in popoverModel.nodeSelected track by $index"
+            ng-bind="(field.alias?field.alias:field.name)" ng-click="nodeSelected_ok(field)"></li>
+    </ul>
+    <div ng-if="!popoverModel.nodeSelected.length" style="text-align: center;font-size: 12px;">当前没有选中的字段</div>
+</script>
+
+<script type="text/ng-template" id="relationship.html">
+    <ul class="popover-ul" ng-if="popoverFlag != 'FROM'">
+        <li ng-class="{'active': popoverFlagSelect === relationship}"
+            ng-repeat="relationship in relationshipList track by $index" ng-bind="relationship"
+            ng-click="chooseRelationship_ok(relationship)"></li>
+    </ul>
+    <ul class="popover-ul" ng-if="popoverFlag == 'FROM'">
+        <li ng-class="{'active': popoverFlagSelect === relationship}" ng-if="$index < 6"
+            ng-repeat="relationship in relationshipList track by $index" ng-bind="relationship"
+            ng-click="chooseRelationship_ok(relationship)"></li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="contact.html">
+    <ul class="popover-ul">
+        <li ng-class="{'active': popoverFlagSelect === contact}" ng-repeat="contact in contactList track by $index"
+            ng-bind="contact" ng-click="chooseContact_ok(contact)"></li>
+    </ul>
+</script>
