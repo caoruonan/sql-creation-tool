@@ -61,6 +61,12 @@ SqlTollApp.controller('DemoController', ['$scope', '$uibModal', 'DemoService',fu
             ORDER_BY: [],
             LIMIT:['', '']
         };
+        $scope.popoverModel = {};
+        angular.forEach($scope.dataSheetModuleList, function (data, index) {
+            $scope.instance.removeGroup(data.defineId, true);
+        });
+        $scope.dataSheetModuleList = [];
+        $scope.taskSql = '';
         angular.forEach($scope.dataSourceNameList,function (data, index) {
             if ($scope.model.database == data.id) {
                 $scope.model.databaseName = data.dbName;
